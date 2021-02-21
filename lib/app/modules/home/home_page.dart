@@ -8,6 +8,7 @@ import 'package:weatherapp/app/modules/home/widgets/background_img.dart';
 import 'package:weatherapp/app/modules/home/widgets/city_name.dart';
 import 'package:weatherapp/app/modules/home/widgets/dateTime.dart';
 import 'package:weatherapp/app/modules/home/widgets/min_max_Temp.dart';
+import 'package:weatherapp/app/modules/home/widgets/pressure_humidity.dart';
 import 'package:weatherapp/app/modules/home/widgets/temperature.dart';
 import 'package:weatherapp/app/shared/stores/weather_store.dart';
 import 'home_controller.dart';
@@ -96,7 +97,7 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
                     });
                   },
                   text: 'Adicionar',
-                  iconData: Icons.delete,
+                  iconData: Icons.place,
                   color: Colors.blueAccent,
                   textStyle: TextStyle(color: Colors.white),
                   iconColor: Colors.white,
@@ -124,6 +125,7 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
                                 SizedBox(height: 70),
                                 temperature(snapshot),
                                 min_max_temp(snapshot),
+                                pressure_humidity(snapshot),
                               ],
                             )
                           : Center(
