@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:material_dialogs/material_dialogs.dart';
 import 'package:material_dialogs/widgets/buttons/icon_button.dart';
-import 'package:material_dialogs/widgets/buttons/icon_outline_button.dart';
-import 'package:mobx/mobx.dart';
 import 'package:weatherapp/app/modules/home/widgets/background_img.dart';
 import 'package:weatherapp/app/modules/home/widgets/city_name.dart';
 import 'package:weatherapp/app/modules/home/widgets/dateTime.dart';
 import 'package:weatherapp/app/modules/home/widgets/min_max_Temp.dart';
+import 'package:weatherapp/app/modules/home/widgets/no_city.dart';
 import 'package:weatherapp/app/modules/home/widgets/pressure_humidity.dart';
 import 'package:weatherapp/app/modules/home/widgets/temperature.dart';
 import 'package:weatherapp/app/shared/stores/weather_store.dart';
 import 'home_controller.dart';
+import 'package:flutter/services.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -45,7 +45,6 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
       'temp-max': weather?.main?.tempMax ?? 0.0,
       'temp-min': weather?.main?.tempMin ?? 0.0,
       'humidity': weather?.main?.humidity,
-      'feelsLike': weather?.main?.feelsLike ?? 0.0,
       'pressure': weather?.main?.pressure,
       'timezone': weather?.timezone,
       'clouds': weather?.clouds?.all,
@@ -57,12 +56,6 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
       'sunset': weather?.sys?.sunset,
     };
     return placeInfo;
-  }
-
-  double transformKelvin2Celsius(double temp) {
-    double newTemp;
-    newTemp = temp - 273.15;
-    return newTemp;
   }
 
   TextEditingController textEditingController = TextEditingController();
@@ -136,9 +129,7 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
                 ),
               ),
             )
-          : Center(
-              child: Text('Adicione alguma cidade!'),
-            ),
+          : NoCityPage(),
     );
   }
 }

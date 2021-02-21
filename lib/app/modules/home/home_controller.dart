@@ -17,4 +17,10 @@ abstract class _HomeControllerBase with Store {
     else
       print('Essa cidade já está na lista!');
   }
+
+  double transformKelvin2Celsius(double temp) {
+    double newTemp;
+    newTemp = temp - 273.15;
+    return newTemp;
+  }
 }

@@ -15,15 +15,13 @@ abstract class _WeatherStoreBase with Store {
   WeatherAPI get weatherApi => _weatherAPI;
 
   Future<WeatherAPI> fetchWeatherApi({String place}) async {
+    final placeName = place.replaceAll(' ', '%20');
+    print(placeName);
     String url =
-        'https://api.openweathermap.org/data/2.5/weather?q=$place,br&APPID=228dd7d24d0eaeee4e90ce3e2244240d';
+        'https://api.openweathermap.org/data/2.5/weather?q=$placeName,br&APPID=228dd7d24d0eaeee4e90ce3e2244240d';
     final response = await http.get(url);
     final json = jsonDecode(response.body);
     print(json.toString());
     return WeatherAPI.fromJson(json);
   }
 }
-
-// main() async {
-//   await WeatherStore().fetchWeatherApi(place: 'Salvador');
-// }
