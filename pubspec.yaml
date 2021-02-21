@@ -33,10 +33,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  # dio: ^3.0.10
   flutter_mobx: ^1.1.0+2
   flutter_modular: ^2.0.1
   http:
+  intl:
+  material_dialogs:
   mobx: ^1.2.1+4
 dev_dependencies:
   flutter_test:
