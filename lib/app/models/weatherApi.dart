@@ -11,7 +11,6 @@ class WeatherAPI {
   int timezone;
   int id;
   String name;
-  int cod;
 
   WeatherAPI({
     this.coord,
@@ -26,7 +25,6 @@ class WeatherAPI {
     this.timezone,
     this.id,
     this.name,
-    this.cod,
   });
 
   WeatherAPI.fromJson(Map<String, dynamic> json) {
@@ -48,7 +46,6 @@ class WeatherAPI {
     timezone = json['timezone'];
     id = json['id'];
     name = json['name'];
-    cod = json['cod'];
   }
 
   Map<String, dynamic> toJson() {
@@ -77,7 +74,6 @@ class WeatherAPI {
     data['timezone'] = this.timezone;
     data['id'] = this.id;
     data['name'] = this.name;
-    data['cod'] = this.cod;
     return data;
   }
 }

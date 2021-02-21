@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 List<String> backgrounds = [
   'assets/morning.jpg',
   'assets/night_c2.jpg',
+  'assets/after_noon.jpg',
 ];
 
 backgroundImg(BoxConstraints constraints, int index) => Container(
@@ -20,7 +21,10 @@ backgroundImg(BoxConstraints constraints, int index) => Container(
             (DateTime.now().hour >= 0 && DateTime.now().hour < 6) ||
                     (DateTime.now().hour >= 18 && DateTime.now().hour <= 23)
                 ? backgrounds[1]
-                : backgrounds[0],
+                : (DateTime.now().hour >= 6 && DateTime.now().hour < 13)
+                    ? backgrounds[0]
+                    : (DateTime.now().hour >= 13 && DateTime.now().hour < 18) ??
+                        backgrounds[2],
           ),
           fit: BoxFit.cover,
         ),

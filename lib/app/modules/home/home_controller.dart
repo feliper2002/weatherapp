@@ -8,10 +8,13 @@ class HomeController = _HomeControllerBase with _$HomeController;
 
 abstract class _HomeControllerBase with Store {
   @observable
-  int value = 0;
+  List<String> cities = [];
 
   @action
-  void increment() {
-    value++;
+  addCity(String city) {
+    if (!cities.contains(city))
+      cities.add(city);
+    else
+      print('Essa cidade já está na lista!');
   }
 }

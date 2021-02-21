@@ -7,6 +7,8 @@ import 'package:mobx/mobx.dart';
 import 'package:weatherapp/app/modules/home/widgets/background_img.dart';
 import 'package:weatherapp/app/modules/home/widgets/city_name.dart';
 import 'package:weatherapp/app/modules/home/widgets/dateTime.dart';
+import 'package:weatherapp/app/modules/home/widgets/min_max_Temp.dart';
+import 'package:weatherapp/app/modules/home/widgets/temperature.dart';
 import 'package:weatherapp/app/shared/stores/weather_store.dart';
 import 'home_controller.dart';
 
@@ -33,21 +35,21 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
     });
   }
 
-  Future<Map<String, dynamic>> getApiData(Map<String, dynamic> placeInfo,
-      {String parsedPlace}) async {
+  Future<Map<String, dynamic>> getApiData({String parsedPlace}) async {
+    Map<String, dynamic> placeInfo;
     final weather = await weatherStore.fetchWeatherApi(place: parsedPlace);
     placeInfo = {
       'name': weather?.name,
-      'temp': weather?.main?.temp,
-      'temp-max': weather?.main?.tempMax,
-      'temp-min': weather?.main?.tempMin,
+      'temp': weather?.main?.temp ?? 0.0,
+      'temp-max': weather?.main?.tempMax ?? 0.0,
+      'temp-min': weather?.main?.tempMin ?? 0.0,
       'humidity': weather?.main?.humidity,
-      'feelsLike': weather?.main?.feelsLike,
+      'feelsLike': weather?.main?.feelsLike ?? 0.0,
       'pressure': weather?.main?.pressure,
       'timezone': weather?.timezone,
       'clouds': weather?.clouds?.all,
-      'coord-lat': weather?.coord?.lat,
-      'coord-lon': weather?.coord?.lon,
+      'coord-lat': weather?.coord?.lat ?? 0.0,
+      'coord-lon': weather?.coord?.lon ?? 0.0,
       'visibility': weather?.visibility,
       'country': weather?.sys?.country,
       'sunrise': weather?.sys?.sunrise,
@@ -62,28 +64,15 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
     return newTemp;
   }
 
-  @observable
-  List<String> cities = [];
-
-  @action
-  addCity(String city) {
-    if (!cities.contains(city))
-      cities.add(city);
-    else
-      print('Essa cidade já está na lista!');
-  }
-
   TextEditingController textEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    Map<String, dynamic> placeInfo;
-
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Dialogs.materialDialog(
-              title: "Add city",
+              title: "Adicionar cidade",
               color: Colors.white,
               context: context,
               actions: [
@@ -92,7 +81,7 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
                   textAlign: TextAlign.center,
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
-                    hintText: 'Place...',
+                    hintText: 'Local...',
                     hintStyle: TextStyle(
                       color: Colors.black,
                     ),
@@ -101,12 +90,12 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
                 IconsButton(
                   onPressed: () {
                     setState(() {
-                      addCity(textEditingController.text);
+                      controller.addCity(textEditingController.text);
                       Navigator.of(context).pop();
                       textEditingController.clear();
                     });
                   },
-                  text: 'Add',
+                  text: 'Adicionar',
                   iconData: Icons.delete,
                   color: Colors.blueAccent,
                   textStyle: TextStyle(color: Colors.white),
@@ -116,16 +105,16 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
         },
         child: Icon(Icons.add, color: Colors.blueAccent),
       ),
-      body: cities.length != 0
+      body: controller.cities.length != 0
           ? PageView.builder(
               controller: _pageController,
-              itemCount: cities.length,
+              itemCount: controller.cities.length,
               itemBuilder: (context, index) => LayoutBuilder(
                 builder: (context, constraints) => Stack(
                   children: [
                     backgroundImg(constraints, index),
                     FutureBuilder(
-                      future: getApiData(placeInfo, parsedPlace: cities[index]),
+                      future: getApiData(parsedPlace: controller.cities[index]),
                       builder: (context, snapshot) => snapshot.data != null
                           ? Column(
                               children: [
@@ -133,14 +122,8 @@ class _HomePageState extends ModularState<HomePage, HomeController> {
                                 cityName(snapshot),
                                 dateTime(),
                                 SizedBox(height: 70),
-                                Text(
-                                  '${transformKelvin2Celsius(snapshot.data['temp']).toStringAsPrecision(3)} °C',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 50,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                                temperature(snapshot),
+                                min_max_temp(snapshot),
                               ],
                             )
                           : Center(
